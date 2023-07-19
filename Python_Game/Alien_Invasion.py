@@ -68,7 +68,7 @@ class AlienInvasion:
         """Create the fleet of aliens"""
         # make an alien
         alien = Alien(self)
-        self.aliens.add(alien)
+        # self.aliens.add(alien)
         alien_width, alien_height = alien.rect.size
         available_space_x = self.settings.screen_width - (2 * alien_width)
         number_alien_x = available_space_x // (2 * alien_width)
@@ -84,7 +84,21 @@ class AlienInvasion:
             for alien_number in range(number_alien_x):
             # Create an alien and place it in row
                 self._create_alien(alien_number, row_number)
-            
+
+    def _check_fleet_edges(self):
+        """Respond appropriatly if any aliens have reached an edge"""
+        for alien in self.aliens .sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop the entire fleet and change the fleet's direction"""
+        for aliens in self.aliens.sprites():
+            aliens.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *=-1
+
+
     def _create_alien(self, alien_number, row_number):
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
@@ -150,6 +164,7 @@ class AlienInvasion:
 
     def _update_aliens(self):
         """Update the position of all aliens in the fleet"""
+        self._check_fleet_edges()
         self.aliens.update()
 
 if __name__ == "__main__":
