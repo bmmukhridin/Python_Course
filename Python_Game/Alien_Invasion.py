@@ -38,7 +38,7 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
-            self.bullets.update()
+            self._update_bullets()
             self._update_screen()
             self._update_aliens()
 
@@ -87,7 +87,7 @@ class AlienInvasion:
 
     def _check_fleet_edges(self):
         """Respond appropriatly if any aliens have reached an edge"""
-        for alien in self.aliens .sprites():
+        for alien in self.aliens.sprites():
             if alien.check_edges():
                 self._change_fleet_direction()
                 break
@@ -96,7 +96,7 @@ class AlienInvasion:
         """Drop the entire fleet and change the fleet's direction"""
         for aliens in self.aliens.sprites():
             aliens.rect.y += self.settings.fleet_drop_speed
-        self.settings.fleet_direction *=-1
+        self.settings.fleet_direction *= -1
 
 
     def _create_alien(self, alien_number, row_number):
@@ -161,11 +161,33 @@ class AlienInvasion:
     def _update_bullets(self):
         """Update position of bullets and get rid if old bulets"""
         # update bullet position
+        self.bullets.update()
+
+        # get rid of bullets that have disappeard
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <=0:
+                self.bullets.remove(bullet)
+
+        self._check_bullet_alien_collisions()
+       
+            
+    def _check_bullet_alien_collisions(self):
+         # check for any bullets that have hit aliens
+        # if so, get rid of the bullet and the alien
+        collision = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True) 
+
+        if not self.aliens:
+            self.bullets.empty()
+            self._create_fleet()
 
     def _update_aliens(self):
         """Update the position of all aliens in the fleet"""
         self._check_fleet_edges()
         self.aliens.update()
+
+        # look for alien-ship collisions
+        # if pygame.sprite.spritecollideany(self.ship, self.aliens):
+        #     print("hello")
 
 if __name__ == "__main__":
      # Make a game instance, and run the game.
