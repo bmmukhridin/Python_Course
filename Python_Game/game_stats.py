@@ -2,7 +2,8 @@ class GameStats:
     """
     Track statistics for Alien Invasion
     """
-    def __init__(self,ai_game):
+
+    def __init__(self, ai_game):
         """
         Initilize statistics
         """
@@ -17,4 +18,3 @@ class GameStats:
         Initilize statistics that can change during the game
         """
         self.ship_left = self.settings.ship_limit
-

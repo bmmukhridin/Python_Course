@@ -9,10 +9,12 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 
+
 class AlienInvasion:
     """
     Overall class to manage game assets and behavior
     """
+
     def __init__(self):
         """
         Initialize the gane, and create game resources
@@ -20,10 +22,10 @@ class AlienInvasion:
         pygame.init()
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        
+
         pygame.display.set_caption("Allien Invension")
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -34,8 +36,6 @@ class AlienInvasion:
 
         # Set the color background color.
         # self.bg_color(230, 230, 230)
-
-    
 
     def run_game(self):
         """
@@ -56,7 +56,7 @@ class AlienInvasion:
                     self.bullets.remove(bullet)
 
             # print(len(self.bullets))
-                  
+
     def _check_events(self):
         """
         Respond to keypress and mouse events
@@ -83,14 +83,15 @@ class AlienInvasion:
 
         # Determine the number of rows of aliens that fit on screen
         ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height- (3 * alien_height) - ship_height)
+        available_space_y = (self.settings.screen_height -
+                             (3 * alien_height) - ship_height)
 
         number_rows = available_space_y // (2 * alien_height)
 
         # Create the full fleet of alien
         for row_number in range(number_rows):
             for alien_number in range(number_alien_x):
-            # Create an alien and place it in row
+                # Create an alien and place it in row
                 self._create_alien(alien_number, row_number)
 
     def _check_fleet_edges(self):
@@ -106,7 +107,6 @@ class AlienInvasion:
             aliens.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
-
     def _create_alien(self, alien_number, row_number):
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
@@ -120,7 +120,7 @@ class AlienInvasion:
         Update image on the screen, and flip to the new screen
         """
         # Redraw the screen during each pass through the loop
-        self.screen.fill((230,230,230))
+        self.screen.fill((230, 230, 230))
         self.ship.blitme()
 
         for bullet in self.bullets.sprites():
@@ -159,7 +159,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             # Stop the ship to the left turn
             self.ship.moving_left = False
-    
+
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group"""
         if len(self.bullets) < self.settings.bullets_allowed:
@@ -173,16 +173,16 @@ class AlienInvasion:
 
         # get rid of bullets that have disappeard
         for bullet in self.bullets.copy():
-            if bullet.rect.bottom <=0:
+            if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
         self._check_bullet_alien_collisions()
-       
-            
+
     def _check_bullet_alien_collisions(self):
-         # check for any bullets that have hit aliens
+        # check for any bullets that have hit aliens
         # if so, get rid of the bullet and the alien
-        collision = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True) 
+        collision = pygame.sprite.groupcollide(
+            self.bullets, self.aliens, True, True)
 
         if not self.aliens:
             self.bullets.empty()
@@ -221,7 +221,6 @@ class AlienInvasion:
         else:
             self.stats.game_active = False
 
-
     def _check_aliens_bottom(self):
         """
         Check if any aliens have reached the bottom of the screen
@@ -233,7 +232,8 @@ class AlienInvasion:
                 self._ship_hit()
                 break
 
+
 if __name__ == "__main__":
-     # Make a game instance, and run the game.
+    # Make a game instance, and run the game.
     ai = AlienInvasion()
     ai.run_game()

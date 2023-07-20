@@ -1,9 +1,11 @@
 import pygame
 
+
 class Ship:
     """
     A class to manage the ship
     """
+
     def __init__(self, ai_game):
         """
         Initialize the ship and set its starting position
@@ -26,28 +28,26 @@ class Ship:
         self.moving_right = False
         self.moving_left = False
 
-
     def update(self):
         """
         Update the ship's position based on the movement flag
         """
-        # Update the ship's x value not the rect 
+        # Update the ship's x value not the rect
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.rect.x += self.settings.ship_speed
 
         if self.moving_left and self.rect.left > 0:
-           self.rect.x -= self.settings.ship_speed
-        
+            self.rect.x -= self.settings.ship_speed
+
         # update rect object from self.x
         # self.rect.x = self.x
-    
+
     def center_ship(self):
         """
         Cenetr the ship on screen
         """
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = float(self.rect.x)
-        
 
     def blitme(self):
         """
