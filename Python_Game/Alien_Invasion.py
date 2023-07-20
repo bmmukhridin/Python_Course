@@ -1,7 +1,10 @@
 # Alien_Invasion
 import sys
+from time import sleep
+
 import pygame
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -27,9 +30,12 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
 
         self._create_fleet()
+        self.stats = GameStats(self)
 
         # Set the color background color.
         # self.bg_color(230, 230, 230)
+
+    
 
     def run_game(self):
         """
@@ -37,10 +43,12 @@ class AlienInvasion:
         """
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
+
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
             self._update_screen()
-            self._update_aliens()
 
             # get rid of bullets that have disappeared.
             for bullet in self.bullets.copy():
@@ -186,8 +194,44 @@ class AlienInvasion:
         self.aliens.update()
 
         # look for alien-ship collisions
-        # if pygame.sprite.spritecollideany(self.ship, self.aliens):
-        #     print("hello")
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
+
+        # look for aliens hitting the bottom of the screen
+        self._check_aliens_bottom()
+
+    def _ship_hit(self):
+        """
+        Respond to the ship being hit by an alien
+        """
+        if self.stats.ship_left > 0:
+            # Decrement ships_left
+            self.stats.ship_left -= 1
+
+            # get rid of any remaining aliens and bullets
+            self.aliens.empty()
+            self.bullets.empty()
+
+            # Crete a new fleet and center the ship
+            self._create_fleet()
+            self.ship.center_ship()
+
+            # Pause
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+
+
+    def _check_aliens_bottom(self):
+        """
+        Check if any aliens have reached the bottom of the screen
+        """
+        screen_rect = self.screen.get_rect()
+        for aliens in self.aliens.sprites():
+            if aliens.rect.bottom >= screen_rect.bottom:
+                # Treat this the same as if the ship got hit
+                self._ship_hit()
+                break
 
 if __name__ == "__main__":
      # Make a game instance, and run the game.
