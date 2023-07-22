@@ -18,3 +18,4 @@ Alien invasion is a clone of popular arcade game with same name. I created this 
   * Shoot
 * Arrow keys (Left - Right)
     * Move the ship left / right
+      
